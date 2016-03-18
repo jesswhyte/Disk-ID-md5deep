@@ -12,7 +12,7 @@ do
 	if [[ $SYSTEM == "FAT"* ]]
 	then
 #uses fiwalk to create DFXML of image
-		fiwalk "$FILE" > "$CWD"/$FILE"-FAT-dfxml.xml"
+		fiwalk -x "$FILE" > "$CWD"/$FILE"-FAT-dfxml.xml"
 #mounts the image in order to run md5deep 
 		sudo mount -t vfat -o loop,ro,noexec $FILE /mnt/diskid/
 #just verify it mounted
