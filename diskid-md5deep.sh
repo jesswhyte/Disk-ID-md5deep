@@ -8,7 +8,7 @@ for FILE in *.img
 do
 #make variable SYSTEM based on a grep of disktype's output
 	SYSTEM=$(disktype "$FILE" | grep "file system")
-#if SYSTEM contains FAT
+#if SYSTEM contains FAT bla
 	if [[ $SYSTEM == "FAT"* ]]
 	then
 #mount command based on forensicswiki instructions mount to /mnt/diskid
