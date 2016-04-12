@@ -3,6 +3,7 @@
 #make cwd a variable
 CWD=$(pwd)
 echo $CWD
+LOGFILE=script.log
 #iterate for every .img file
 for FILE in *.img
 do
@@ -11,8 +12,9 @@ do
 #if SYSTEM contains FAT
 	if [[ $SYSTEM == "FAT"* ]]
 	then
+		echo "$FILE = FAT" >> $LOGFILE
 #uses fiwalk to create DFXML of image
-		fiwalk "$FILE" > "$CWD"/$FILE"-FAT-dfxml.xml"
+		fiwalk -X "$CWD"/$FILE"-FAT-dfxml.xml" "$FILE" >> $LOGFILE
 #mounts the image in order to run md5deep 
 		sudo mount -t vfat -o loop,ro,noexec $FILE /mnt/diskid/
 #just verify it mounted
@@ -20,7 +22,7 @@ do
 #cd to mount directory
 		cd /mnt/diskid
 #use md5deep to create .csv for use by archivists and appraisers
-		md5deep -r -l -t ./* > "$CWD"/$FILE"-FAT-manifest.csv"
+		md5deep -r -l -t ./* > "$CWD"/$FILE"-FAT-manifest.csv" >> $LOGFILE
 #cd back to cwd and unmount
 		cd "$CWD"
 		sudo umount /mnt/diskid		
@@ -39,6 +41,9 @@ do
 #cd back to cwd and unmount
 		cd "$CWD"
 		sudo umount /mnt/diskid
+	elif [[ $SYSTEM == "ISO"* ]]
+	then 
+		fiwalk -X "$CWD"/$FILE"-ISO-dfxml.xml" "$FILE"
+		printf "File: %s\nSystem: %s\n\n" "$FILE" "$SYSTEM" >> $LOGFILE
 	fi
 done
-
