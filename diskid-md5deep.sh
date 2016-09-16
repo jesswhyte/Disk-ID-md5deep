@@ -15,7 +15,7 @@ do
 		echo "$FILE = FAT" >> $LOGFILE
 #uses fiwalk to create DFXML of image
 		fiwalk -X "$CWD"/$FILE"-FAT-dfxml.xml" "$FILE" 
-#mounts the image in order to run md5deep 
+#mounts the image in order to run md5deep, note the mount command 
 		sudo mount -t vfat -o loop,ro,noexec $FILE /mnt/diskid/
 #just verify it mounted
 		echo $?
