@@ -5,16 +5,17 @@ CWD=$(pwd)
 echo $CWD
 LOGFILE=script.log
 #iterate for every .img file
-for FILE in *.img
+##for FILE in *.img
+for FILE in $(find ./ -name '*.img');
 do
 #make variable SYSTEM based on a grep of disktype's output
 	SYSTEM=$(disktype "$FILE" | grep "file system")
+	printf "File: %s , System: %s\n" "$FILE" "$SYSTEM" >> $LOGFILE
 #if SYSTEM contains FAT
 	if [[ $SYSTEM == "FAT"* ]]
 	then
-		echo "$FILE = FAT" >> $LOGFILE
 #uses fiwalk to create DFXML of image
-		fiwalk -X "$CWD"/$FILE"-FAT-dfxml.xml" "$FILE" 
+		fiwalk -f -X "$CWD"/$FILE"-FAT-dfxml.xml" "$FILE" 
 #mounts the image in order to run md5deep, note the mount command 
 		sudo mount -t vfat -o loop,ro,noexec $FILE /mnt/diskid/
 #just verify it mounted
@@ -43,7 +44,15 @@ do
 		sudo umount /mnt/diskid
 	elif [[ $SYSTEM == "ISO"* ]]
 	then 
-		fiwalk -X "$CWD"/$FILE"-ISO-dfxml.xml" "$FILE"
-		printf "File: %s\nSystem: %s\n\n" "$FILE" "$SYSTEM" >> $LOGFILE
+		fiwalk -f -X "$CWD"/$FILE"-ISO-dfxml.xml" "$FILE"
+		
 	fi
+done
+		
+for FILE in $(find ./ -name '*.iso')
+do
+		SYSTEM=$(disktype "$FILE" | grep "file system")
+#uses fiwalk to create DFXML of image
+		fiwalk -f -X "$CWD"/$FILE"-ISO-dfxml.xml" "$FILE"
+		printf "File: %s , System: %s\n\n" "$FILE" "$SYSTEM" >> $LOGFILE
 done
