@@ -15,6 +15,7 @@ do
 #make variable SYSTEM based on a grep of disktype's output
 	SYSTEM=$(disktype "$FILE" | grep "file system")
 	printf "File: %s , System: %s\n" "$FILE" "$SYSTEM" >> $LOGFILE
+	echo $FILE
 #if SYSTEM contains FAT
 	if [[ $SYSTEM == "FAT"* ]]
 	then
@@ -35,7 +36,7 @@ do
 	elif [[ $SYSTEM == "HFS"* ]]
 	then
 #use hfs2dfxml to create DFXML file (based on install location)
-		python /media/sf_bcadmin/scripts/hfs2dfxml/hfs2dfxml/hfs2dfxml.py "$FILE" "$CWD"/$FILE"-HFS-dfxml.xml"
+		python ~/Desktop/Shared\ Folders\ and\ Media/sf_UTL-DigPres-TEMP/scripts/hfs2dfxml/hfs2dfxml/hfs2dfxml.py "$FILE" "$CWD"/$FILE"-HFS-dfxml.xml"
 #mount the image according to forensicwiki mounting suggestions
 		sudo mount -t hfs -o loop,ro,noexec $FILE /mnt/diskid/
 #just verify it mounted
