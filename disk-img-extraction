@@ -1,16 +1,19 @@
 #! /bin/bash
-#script to id filesystem type for raw disk images using disktype, mount accordingly (currently only hfs and vfat) and then run hashdeep to create dfxml and .csv reports, and use rsync to extract files to /Extracted folder
+#script to id filesystem type for raw disk images using disktype, mount accordingly (currently only hfs and vfat),
+#run hashdeep to create dfxml and .csv reports, and 
+#use rsync to extract files to /Extracted folder
 #assumes /mnt/diskid exists
 #assumes $DIR/Extracted exists
 #assumes disktype, hashdeep are installed
 
+### TO DO: write in directory structure
 
 #make cwd a variable
 CWD=$(pwd)
 echo $CWD
 LOGFILE=extract.log
 
-#iterate for every .img file
+#iterate for every .img file (warning: recursive, limit depth on find with -maxdepth)
 ##for FILE in *.img
 for FILE in $(find . -name '*.img');
 do
