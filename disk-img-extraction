@@ -7,6 +7,7 @@
 #assumes disktype, hashdeep are installed
 
 ### TO DO: write in directory structure
+### TO DO: add logging/log updates (e.g. if mount fail or extract empty, notify/log)
 
 #make cwd a variable
 CWD=$(pwd)
