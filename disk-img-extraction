@@ -2,6 +2,7 @@
 #script to id filesystem type for raw disk images using disktype, mount accordingly (currently only hfs and vfat),
 #run hashdeep to create dfxml and .csv reports, and 
 #use rsync to extract files to /Extracted folder
+
 #assumes /mnt/diskid exists
 #assumes $DIR/Extracted exists
 #assumes disktype, hashdeep are installed
