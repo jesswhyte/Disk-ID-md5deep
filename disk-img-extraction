@@ -33,7 +33,7 @@ do
 #cd to mount directory,
 #IMPORTANT NOTE:::: assumes /mnt/diskid exists
 		cd /mnt/diskid
-#use hashdeep to create .csv for use by archivists and appraisers
+#use hashdeep to create .csv for use by archivists OR dfxmls (comment out the one you don't want)
 		hashdeep -r -l -c md5 ./* > "$DIR""/manifest.csv" 
 		hashdeep -r -l -d -c md5 ./* > "$DIR""/dfxml.xml"
 #rsync -a all files to $/DIR/Extracted/
@@ -51,7 +51,7 @@ do
 		echo $?
 #cd to mount directory
 		cd /mnt/diskid
-#use hashdeep to create DFXML and .csv files
+#use hashdeep to create DFXML and .csv files OR dfxmls (comment out the one you don't want)
 		hashdeep -r -l -c md5 ./* > "$DIR""/manifest.csv"
 		hashdeep -r -l -d -c md5 ./* > "$DIR""/dfxml.xml"
 #rsync -a all files to $DIR/Extracted/
