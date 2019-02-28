@@ -3,14 +3,14 @@
 #make cwd a variable
 CWD=$(pwd)
 echo $CWD
-LOGFILE=script.log
+#LOGFILE=script.log
 #iterate for every .img file
 ##for FILE in *.img
 for FILE in $(find ./ -name '*.img');
 do
 #make variable SYSTEM based on a grep of disktype's output
 	SYSTEM=$(disktype "$FILE" | grep "file system")
-	printf "File: %s , System: %s\n" "$FILE" "$SYSTEM" >> $LOGFILE
+	printf "File: %s , System: %s\n" "$FILE" "$SYSTEM" #>> $LOGFILE
 #if SYSTEM contains FAT
 	if [[ $SYSTEM == "FAT"* ]]
 	then
@@ -54,5 +54,5 @@ do
 		SYSTEM=$(disktype "$FILE" | grep "file system")
 #uses fiwalk to create DFXML of image
 		fiwalk -f -X "$CWD"/$FILE"-ISO-dfxml.xml" "$FILE"
-		printf "File: %s , System: %s\n\n" "$FILE" "$SYSTEM" >> $LOGFILE
+		printf "File: %s , System: %s\n\n" "$FILE" "$SYSTEM" #>> $LOGFILE
 done
