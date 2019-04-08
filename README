@@ -1,0 +1,18 @@
+Jess Whyte, 2016-
+
+*diskid-md5deep.sh*
+
+Bash script to id filestystem type for a disk image using disktype, mounts the image accordingly (currently only hfs and vfat) and then runs md5deep +/or fiwalk. Note: fiwalk for fat filesystems runs before mounting. Can be modified to run, say, siegfried. 
+
+*hfs-diskid-med5deep.sh*
+
+Modification of above to work with HFS2DFXML (Dianne Dietrich - HFS2DFXML - https://github.com/cul-it/hfs2dfxml)
+
+*disk-img-extraction.sh*
+
+mounts .img and .iso according to disktype output, runs sf to create .csv reports (or hashdeep or fiwalk), extracts contents to an Extracted folder.
+
+Note: assumes every img/iso is in its own directory. If they're all in one, it's going to create *one* Extracted directory and extract everything to there. 
+
+
+
