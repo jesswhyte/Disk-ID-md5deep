@@ -7,15 +7,13 @@
 #assumes $DIR/Extracted exists
 #assumes disktype, hashdeep are installed
 
-### TODO: fix directory checks/creation
-### TODO: fix logging - e.g. if mount fails or extract empty, note in log
 
 #make cwd a variable
 CWD=$(pwd)
 echo $CWD
 
 
-echo "You need the right permissions to run this script, requires disk mounting"
+echo "You need to have sudo permission to run this script, requires disk mounting"
 
 #iterate for every .img file (warning: recursive, limit depth on find with -maxdepth)
 ##for FILE in *.img
@@ -37,12 +35,13 @@ do
 #cd to mount directory,
 #IMPORTANT NOTE:::: assumes /mnt/diskid exists
 		cd /mnt/diskid
-#use hashdeep or siegfried to create .csv for use by archivists OR dfxmls (comment out the one you don't want)
+#use hashdeep to create .csv for use by archivists OR dfxmls (comment out the one you don't want)
 		sf -csv -hash md5 . > $DIR"/"$(basename ${FILE%".img"})"-manifest.csv" 
 		#hashdeep -r -l -d -c md5 ./* > $DIR"/"$(basename ${FILE%".img"})"-dfxml.xml"
 #rsync -a all files to $/DIR/Extracted/
-		mkdir "$DIR""/Extracted"
-		rsync -av ./ "$DIR""/Extracted/"
+#IMPORTANT NOTE:::: assumes $DIR/Extracted/ exists, can create with something like mkdir $DIR/Extracted/
+		mkdir $DIR/Extracted
+		rsync -rltv . $DIR/Extracted/
 #cd back to cwd and unmount
 		cd "$CWD"
 		sudo umount /mnt/diskid		
@@ -55,13 +54,12 @@ do
 		echo $?
 #cd to mount directory
 		cd /mnt/diskid
-#use siegfried or hashdeep to create DFXML and .csv files OR dfxmls (comment out the one you don't want)
+#use hashdeep to create DFXML and .csv files OR dfxmls (comment out the one you don't want)
 		sf -csv -hash md5 . > $DIR"/"$(basename ${FILE%".img"})"-manifest.csv"
 		#hashdeep -r -l -d -c md5 ./* > $DIR"/"$(basename ${FILE%".img"})"-dfxml.xml"
 #rsync -a all files to $DIR/Extracted/
 #add -n flag to test dry run
-		mkdir "$DIR""/Extracted"
-		rsync -av ./ "$DIR""/Extracted/" 
+		rsync -rltv ./ $DIR/Extracted/ 
 #cd back to cwd and unmount
 		cd "$CWD"
 		sudo umount /mnt/diskid	
@@ -74,16 +72,21 @@ do
 	printf "File: %s , System: %s\n\n" "$FILE" "$SYSTEM"
 
 	DIR=$(dirname $(realpath $FILE))
-	mkdir "$DIR""/Extracted"	
+	mkdir -m 777 $DIR/Extracted	
+	
+#uses fiwalk to create DFXML of image
+	#fiwalk -f -X $DIR"/"$(basename ${FILE%".iso"})"-ISO-dfxml.xml" "$FILE"
+	
 	sudo mount -o loop,ro,noexec $FILE /mnt/diskid/
 	echo $?
 	cd /mnt/diskid
-	#use siegfried or hashdeep to create .csv files OR dfxmls (comment out the one you don't want)
+	echo "changed to /mnt/diskid/ about to LS..."
+	ls
+	#use siegfried to create .csv files 
 	sf -csv -hash md5 . > $DIR"/"$(basename ${FILE%".iso"})"-manifest.csv"
-	#hashdeep -r -l -d -c md5 ./* > $DIR"/"$(basename ${FILE%".iso"})"-dfxml.xml"
-	#fiwalk -f -X $DIR"/"$(basename ${FILE%".iso"})"-ISO-dfxml.xml" "$FILE"
+
 #add -n flag to test dry run
-	rsync -av ./ "$DIR""/Extracted/" 
+	rsync -rltv . $DIR/Extracted/ 
 #cd back to cwd and unmount
 	cd "$CWD"
 	sudo umount /mnt/diskid	
