@@ -2,9 +2,7 @@
 #script to id filesystem type for raw disk images using disktype, mount accordingly (currently only hfs and vfat),
 #run sf to create .csv reports, 
 #use rsync to extract files to /Extracted folder
-
 #assumes /mnt/diskid exists
-#assumes $DIR/Extracted exists
 #assumes disktype, hashdeep are installed
 
 
@@ -15,7 +13,7 @@ echo $CWD
 
 echo "You need to have sudo permission to run this script, requires disk mounting"
 
-#iterate for every .img file (warning: recursive, limit depth on find with -maxdepth)
+#iterate for every .img file (warning: recursive search for .img files based on extension, limit depth on this with find with -maxdepth)
 ##for FILE in *.img
 for FILE in $(find . -name '*.img');
 do
@@ -39,8 +37,7 @@ do
 		sf -csv -hash md5 . > $DIR"/"$(basename ${FILE%".img"})"-manifest.csv" 
 		#hashdeep -r -l -d -c md5 ./* > $DIR"/"$(basename ${FILE%".img"})"-dfxml.xml"
 #rsync -a all files to $/DIR/Extracted/
-#IMPORTANT NOTE:::: assumes $DIR/Extracted/ exists, can create with something like mkdir $DIR/Extracted/
-		mkdir $DIR/Extracted
+		mkdir -m 777 $DIR/Extracted
 		rsync -rltv . $DIR/Extracted/
 #cd back to cwd and unmount
 		cd "$CWD"
